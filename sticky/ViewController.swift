@@ -9,23 +9,51 @@
 import UIKit
 import SceneKit
 import ARKit
+import FontAwesome_swift
 
 class ViewController: UIViewController, ARSCNViewDelegate, UITextFieldDelegate {
-
+    
+    @IBOutlet weak var textIcon: UILabel!
+    @IBOutlet weak var imageIcon: UILabel!
+    
+    var modalIsOpen = false
     var noteText: String?;
     var currentHitResult: ARHitTestResult?;
-    
+    @IBOutlet weak var addButton: UIButton!
+    @IBOutlet weak var centerPopupConstraint: NSLayoutConstraint!
+    @IBOutlet weak var centerPopupView: UIView!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet var sceneView: ARSCNView!
     
+    @IBAction func addButtonTap(_ sender: Any) {
+        if(modalIsOpen) {
+            self.closeModalPromptForNote()
+        } else {
+            self.openModalPromptForNote()
+        }
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        // POPUP PROPS
+        self.centerPopupView.layer.cornerRadius = 10
+        self.centerPopupView.layer.masksToBounds = true
+        self.addButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 60)
+        self.addButton.setTitle(String.fontAwesomeIcon(name: .plusCircle), for: .normal)
+        
+        self.textIcon.font = UIFont.fontAwesome(ofSize: 20)
+        self.textIcon.text = String.fontAwesomeIcon(code: "fa-font")
+        
+        self.imageIcon.font = UIFont.fontAwesome(ofSize: 20)
+        self.imageIcon.text = String.fontAwesomeIcon(code: "fa-camera")
+        
+        
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.handleTouchInWorld(withGestureRecognizer:)))
         
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
-        self.textField.delegate = self
+        //self.textField.delegate = self
         self.sceneView.delegate = self
         
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
@@ -87,13 +115,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITextFieldDelegate {
     }
     func openModalPromptForNote() {
         print("STARTING TO OPEN MODAL")
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let myModalViewController = storyboard.instantiateViewController(withIdentifier: "AddNoteViewController")
-        myModalViewController.modalPresentationStyle = UIModalPresentationStyle.fullScreen
-        myModalViewController.modalTransitionStyle = UIModalTransitionStyle.coverVertical
-        self.present(myModalViewController, animated: true, completion: nil)
+        centerPopupConstraint.constant = 200
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+        self.modalIsOpen = true
     }
-    
+    func closeModalPromptForNote() {
+        print("STARTING TO CLOSE MODAL")
+        centerPopupConstraint.constant = 500
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+        self.modalIsOpen = false
+    }
     func onClosedModalPromptForNote() {
         print("FINISHED CLOSING MODAL")
         guard let text = self.noteText else { return }

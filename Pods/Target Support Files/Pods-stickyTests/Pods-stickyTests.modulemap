@@ -1,0 +1,6 @@
+framework module Pods_stickyTests {
+  umbrella header "Pods-stickyTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
