@@ -11,51 +11,55 @@ import SceneKit
 import ARKit
 import FontAwesome_swift
 
-class ViewController: UIViewController, ARSCNViewDelegate, UITextFieldDelegate {
-    
-    @IBOutlet weak var textIcon: UILabel!
-    @IBOutlet weak var imageIcon: UILabel!
-    
-    var modalIsOpen = false
-    var noteText: String?;
-    var currentHitResult: ARHitTestResult?;
-    @IBOutlet weak var addButton: UIButton!
-    @IBOutlet weak var centerPopupConstraint: NSLayoutConstraint!
-    @IBOutlet weak var centerPopupView: UIView!
-    @IBOutlet weak var textField: UITextField!
-    @IBOutlet var sceneView: ARSCNView!
-    
-    @IBAction func addButtonTap(_ sender: Any) {
-        if(modalIsOpen) {
-            self.closeModalPromptForNote()
-        } else {
-            self.openModalPromptForNote()
+class ViewController: UIViewController, ARSCNViewDelegate  {
+
+    var noteReadyToPin:Bool = false {
+        didSet{
+            if noteReadyToPin == true {
+                self.addButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 50)
+                self.addButton.setTitle(String.fontAwesomeIcon(name: .thumbTack), for: .normal)
+            } else {
+                self.addButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 50)
+                self.addButton.setTitle(String.fontAwesomeIcon(name: .plusCircle), for: .normal)
+            }
         }
-        
+    };
+    var currentHitResult: ARHitTestResult?;
+    
+    @IBOutlet weak var addButton: UIButton!
+    @IBOutlet var sceneView: ARSCNView!
+    @IBAction func addButtonTap(_ sender: Any) {
+        if self.noteReadyToPin {
+            searchToPinNote()
+        } else {
+            showAlertWithOptions()
+        }
     }
+    func searchToPinNote() {
+        print("SEARCHING TO PIN")
+    }
+    func showAlertWithOptions() {
+        let alert = UIAlertController(title: "Hi!", message: "Select the type of note you wish to create", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Text Note", style: .default, handler: { action in self.onTextNoteOptionSelected()
+        }))
+        alert.addAction(UIAlertAction(title: "Image Note", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func onTextNoteOptionSelected() {
+        self.performSegue(withIdentifier: "ShowAddNoteViewController", sender: self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // POPUP PROPS
-        self.centerPopupView.layer.cornerRadius = 10
-        self.centerPopupView.layer.masksToBounds = true
-        self.addButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 60)
+
+        self.addButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 50)
         self.addButton.setTitle(String.fontAwesomeIcon(name: .plusCircle), for: .normal)
-        
-        self.textIcon.font = UIFont.fontAwesome(ofSize: 20)
-        self.textIcon.text = String.fontAwesomeIcon(code: "fa-font")
-        
-        self.imageIcon.font = UIFont.fontAwesome(ofSize: 20)
-        self.imageIcon.text = String.fontAwesomeIcon(code: "fa-camera")
-        
-        
+    
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.handleTouchInWorld(withGestureRecognizer:)))
         
-        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        
-        //self.textField.delegate = self
         self.sceneView.delegate = self
-        
         self.sceneView.addGestureRecognizer(tapGestureRecognizer)
         self.sceneView.autoenablesDefaultLighting = true
         self.sceneView.automaticallyUpdatesLighting = true
@@ -70,7 +74,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITextFieldDelegate {
         configuration.isLightEstimationEnabled = true
         // Run the view's session
         sceneView.session.run(configuration)
-        print("ENABLED")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -78,7 +81,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITextFieldDelegate {
         
         // Pause the view's session
         sceneView.session.pause()
-        print("PAUSED")
     }
     
     override func didReceiveMemoryWarning() {
@@ -110,29 +112,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITextFieldDelegate {
         
         guard let hitTestResult = hitTestResults.first else { return }
         self.currentHitResult = hitTestResult
-        self.openModalPromptForNote()
-   
     }
-    func openModalPromptForNote() {
-        print("STARTING TO OPEN MODAL")
-        centerPopupConstraint.constant = 200
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
-        self.modalIsOpen = true
-    }
-    func closeModalPromptForNote() {
-        print("STARTING TO CLOSE MODAL")
-        centerPopupConstraint.constant = 500
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
-        self.modalIsOpen = false
-    }
-    func onClosedModalPromptForNote() {
+    func onNoteAdded(title: String, note: String) {
         print("FINISHED CLOSING MODAL")
-        guard let text = self.noteText else { return }
-        self.addStickyPostToLocation(hitTestResult: self.currentHitResult, text: text)
+        //guard let text = self.noteText else { return }
+        //self.addStickyPostToLocation(hitTestResult: self.currentHitResult, text: text)
+        print("title")
+        print(title)
+        print("note")
+        print(note)
+        self.noteReadyToPin = true
     }
     
     func addStickyPostToLocation(hitTestResult: ARHitTestResult?, text: String) {
@@ -180,30 +169,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UITextFieldDelegate {
         
         // RESET VALUES TO DEFAULT
         self.currentHitResult = nil
-        self.noteText = nil
     }
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("RETURN GO HIT")
-        self.noteText = textField.text
-        textField.resignFirstResponder()
-        return false
-    }
-    
-    @objc func keyboardWillShow(notification: NSNotification) {
-        print("keyboardWillShow")
-        print(self.view.frame.origin.y)
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= keyboardSize.height
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide(notification: NSNotification) {
-        print("keyboardWillHide")
-        print(self.view.frame.origin.y)
-        if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) != nil {
-            self.view.frame.origin.y = 0
-        }
-    }
+
 }
