@@ -15,7 +15,6 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     @IBOutlet weak var titleInput: UITextField!
     @IBOutlet weak var noteInput: UITextView!
     @IBOutlet weak internal var footer: UIView!
-    
     @IBOutlet weak var footerBottom: NSLayoutConstraint!
     
     var noteText = String()
@@ -33,6 +32,7 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate, UITextViewDe
             self.dismiss(animated: true, completion:{ presenter.onNoteAdded(title: self.titleInput.text!, note: self.noteInput.text) })
         }
     }
+    
     override func viewDidLoad() {
         self.titleInput.delegate = self
         self.noteInput.delegate = self
@@ -42,8 +42,6 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate, UITextViewDe
         NotificationCenter.default.addObserver(self, selector: #selector(AddNoteViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     func setInputStyles() {
-//        self.confirmButton.titleLabel?.font = UIFont.fontAwesome(ofSize: 30)
-//        self.confirmButton.setTitle(String.fontAwesomeIcon(name: .plusSquareO), for: .normal)
         self.confirmButton.backgroundColor = UIColor(hexString: "#F5D841")
         self.confirmButton.tintColor = UIColor(hexString: "#ffffff")
         self.confirmButton.layer.cornerRadius = 5
@@ -70,15 +68,12 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("RETURN GO HIT")
         self.noteText = textField.text!
         textField.resignFirstResponder()
         return false
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
-        print("keyboardWillShow")
-        print(self.footer.frame.origin.y)
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if footerBottom.constant == 0 {
                 footerBottom.constant = keyboardSize.height
@@ -90,8 +85,6 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        print("keyboardWillHide")
-        print(self.footer.frame.origin.y)
         if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) != nil {
             footerBottom.constant = 0
             UIView.animate(withDuration: 0.5) {
