@@ -36,12 +36,12 @@ class AddNoteViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     override func viewDidLoad() {
         self.titleInput.delegate = self
         self.noteInput.delegate = self
-        self.setInputStyles()
+        self.setStyles()
         
         NotificationCenter.default.addObserver(self, selector: #selector(AddNoteViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(AddNoteViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-    func setInputStyles() {
+    func setStyles() {
         self.confirmButton.backgroundColor = UIColor(hexString: "#F5D841")
         self.confirmButton.tintColor = UIColor(hexString: "#ffffff")
         self.confirmButton.layer.cornerRadius = 5

@@ -153,13 +153,18 @@ class ViewController: UIViewController, ARSCNViewDelegate  {
         let alert = UIAlertController(title: "Hi!", message: "Select the type of note you wish to create", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Text Note", style: .default, handler: { action in self.onTextNoteOptionSelected()
         }))
-        alert.addAction(UIAlertAction(title: "Image Note", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Image Note", style: .default, handler: { action in self.onImageNoteOptionSelected()
+        }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
     func onTextNoteOptionSelected() {
         self.performSegue(withIdentifier: "ShowAddNoteViewController", sender: self)
+    }
+    
+    func onImageNoteOptionSelected() {
+        print("Image option selected")
     }
     
     @objc func handleTouchInWorld(withGestureRecognizer recognizer: UIGestureRecognizer) {
@@ -208,12 +213,19 @@ class ViewController: UIViewController, ARSCNViewDelegate  {
         rectangle.alpha = 1
         rectangle.lineWidth = 0
         
-        let labelNode = SKLabelNode(text: self.noteText)
-        labelNode.fontSize = 14
-        labelNode.position = CGPoint(x:100,y:100)
-        labelNode.fontColor = UIColor.init(hexString: "#000000")
+        let noteNode = SKLabelNode(text: self.noteText)
+        noteNode.fontSize = 12
+        noteNode.position = CGPoint(x:100,y:100)
+        noteNode.fontColor = UIColor.init(hexString: "#000000")
+        
+        let titleNode = SKLabelNode(text: self.titleText)
+        titleNode.fontSize = 12
+        titleNode.position = CGPoint(x:100,y:150)
+        titleNode.fontColor = UIColor.init(hexString: "#000000")
+        
         skScene.addChild(rectangle)
-        skScene.addChild(labelNode)
+        skScene.addChild(noteNode)
+        skScene.addChild(titleNode)
         
         let plane = SCNPlane(width: 0.25, height: 0.25)
         let material = SCNMaterial()

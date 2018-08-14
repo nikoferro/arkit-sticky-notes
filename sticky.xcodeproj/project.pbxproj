@@ -43,7 +43,7 @@
 		2069C28F06B7CFD70E08F181 /* Pods-sticky.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sticky.debug.xcconfig"; path = "Pods/Target Support Files/Pods-sticky/Pods-sticky.debug.xcconfig"; sourceTree = "<group>"; };
 		34DEC21AFECED6BCED6D0E12 /* Pods-sticky.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sticky.release.xcconfig"; path = "Pods/Target Support Files/Pods-sticky/Pods-sticky.release.xcconfig"; sourceTree = "<group>"; };
 		7A98F97020EB0C570085ED39 /* AddNoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNoteViewController.swift; sourceTree = "<group>"; };
-		7AE4624A20E99BBC009ED0CD /* sticky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sticky.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AE4624A20E99BBC009ED0CD /* Sticky Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sticky Notes.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE4624D20E99BBC009ED0CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AE4624F20E99BBC009ED0CD /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		7AE4625120E99BBC009ED0CD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -131,7 +131,7 @@
 		7AE4624B20E99BBC009ED0CD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7AE4624A20E99BBC009ED0CD /* sticky.app */,
+				7AE4624A20E99BBC009ED0CD /* Sticky Notes.app */,
 				7AE4626020E99BBD009ED0CD /* stickyTests.xctest */,
 				7AE4626B20E99BBD009ED0CD /* stickyUITests.xctest */,
 			);
@@ -190,7 +190,7 @@
 			);
 			name = sticky;
 			productName = sticky;
-			productReference = 7AE4624A20E99BBC009ED0CD /* sticky.app */;
+			productReference = 7AE4624A20E99BBC009ED0CD /* Sticky Notes.app */;
 			productType = "com.apple.product-type.application";
 		};
 		7AE4625F20E99BBD009ED0CD /* stickyTests */ = {
@@ -566,7 +566,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = nikoferro.sticky;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Sticky Notes";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -585,7 +585,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = nikoferro.sticky;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Sticky Notes";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
